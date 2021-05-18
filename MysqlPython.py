@@ -64,6 +64,7 @@ def connectServer():
     
     mycursor = mydb.cursor()
     print("Connection successfull")
+    
     break
   except InterfaceError:
     print("Couldn't connect to the server trying again...")

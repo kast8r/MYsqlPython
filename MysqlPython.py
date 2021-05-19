@@ -5,7 +5,6 @@ from mysql.connector.constants import MAX_MYSQL_TABLE_COLUMNS
 import sys
 import os
 import json
-
 from mysql.connector.errors import InterfaceError, ProgrammingError
 
 
@@ -76,7 +75,7 @@ def checkCredentials():
   if credentials == "y" :
     changeCredentials()
   elif credentials == "n" :
-    exitScript() 
+    exitToMenut() 
   elif credentials == "" or credentials != "y" or credentials != "n":
     print("Enter a valid answer")
     chooseAnOption()  
@@ -108,6 +107,7 @@ def connectServer():
     break
   except InterfaceError:
     print("Couldn't connect to the server trying again... (" + str(Attempts) + " attemtps remaining)")
+    time.sleep(1)
     Attempts = Attempts -1
     if Attempts == 0 :
       time.sleep(1)
@@ -157,6 +157,10 @@ def exitScript():
   print("Have a nice day :)")
   time.sleep(1)
   exit()
+def exitToMenut():
+  print("Exiting to menu...\n")
+  time.sleep(1)
+  mainMenu()
 
 
 
@@ -165,8 +169,9 @@ def mainMenu():
         "2. To create new databases\n",
         "3. To create new tables\n",
         "4. To list all tables\n",
-        "5. Exit\n")
-  option = int(input("Chose an option between (1-5): "))
+        "5. To change credentials\n",
+        "6. Exit\n")
+  option = int(input("Chose an option between (1-6): "))
 
 
   if option == 1:
@@ -178,6 +183,8 @@ def mainMenu():
   elif option == 4:
     listTables()
   elif option == 5:
+    checkCredentials()
+  elif option == 6:
     exitScript()
   elif option == 666:
     abelardoAsc()

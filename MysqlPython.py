@@ -72,12 +72,12 @@ def checkCredentials():
   file = open("database.txt","r")
   fileContent = file.readlines()
   print("Server ip: " + fileContent[0] +"" + "Username: " + fileContent[1] +"" + "Password: " + fileContent[2] +"" + "Table: " + fileContent[3] +"")
-  changeCredentials = input("Do you want to change the credentials? y/n")
-  if changeCredentials == "y" :
+  credentials = input("Do you want to change the credentials y/n?: ")
+  if credentials == "y" :
     changeCredentials()
-  elif changeCredentials == "n" :
+  elif credentials == "n" :
     exitScript() 
-  elif changeCredentials == "" or changeCredentials != "y" or changeCredentials != "n":
+  elif credentials == "" or credentials != "y" or credentials != "n":
     print("Enter a valid answer")
     chooseAnOption()  
   file.close()   

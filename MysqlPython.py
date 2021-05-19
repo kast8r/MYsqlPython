@@ -6,22 +6,50 @@ import sys
 import os
 import json
 
-from mysql.connector.errors import InterfaceError
-
+from mysql.connector.errors import InterfaceError, ProgrammingError
 
 
 
 print("\n",
-"███╗   ███╗██╗   ██╗███████╗ ██████╗ ██╗\n",     
-"████╗ ████║╚██╗ ██╔╝██╔════╝██╔═══██╗██║\n",     
-"██╔████╔██║ ╚████╔╝ ███████╗██║   ██║██║\n",     
-"██║╚██╔╝██║  ╚██╔╝  ╚════██║██║▄▄ ██║██║\n",     
-"██║ ╚═╝ ██║   ██║   ███████║╚██████╔╝███████╗\n",
-"╚═╝     ╚═╝   ╚═╝   ╚══════╝ ╚══▀▀═╝ ╚══════╝\n"
-"Script made by kastor",
+"\033[1;32;40m███╗   ███╗██╗   ██╗███████╗ ██████╗ ██╗\n",     
+"\033[1;32;40m████╗ ████║╚██╗ ██╔╝██╔════╝██╔═══██╗██║\n",     
+"\033[1;32;40m██╔████╔██║ ╚████╔╝ ███████╗██║   ██║██║\n",     
+"\033[1;32;40m██║╚██╔╝██║  ╚██╔╝  ╚════██║██║▄▄ ██║██║\n",     
+"\033[1;32;40m██║ ╚═╝ ██║   ██║   ███████║╚██████╔╝███████╗\n",
+"\033[1;32;40m╚═╝     ╚═╝   ╚═╝   ╚══════╝ ╚══▀▀═╝ ╚══════╝\n"
+"\033[1;31;40mScript made by kastor",
 "\n")
 
+def abelardoAsc():
+  print("\n"               
+  "      ___\n"
+  "    .'``.``.\n"
+  " __/ (o) `, `.\n"
+  "'-=`,     ;   `.\n"
+  "    \    :      `-.\n"
+  "    /    ';        `.\n"
+  "   /      .'         `.\n"
+  "   |     (      `.     `-.._\n"
+  "    \     \` ` `. \         `-.._\n"
+  "     `.   ;`-.._ `-`._.-. `-._   `-._\n"
+  "       `..'     `-.```.  `-._ `-.._.'\n"
+  "         `--..__..-`--'      `-.,'\n"
+  "            `._)`/\n"
+  "             /--(\n"
+  "          -./,--'`-,\n"
+  "       ,^--(\n"                    
+  "       ,--' `-,\n"
+  "\n"
+  "This is Abelardo\n")
 
+def checkCredentials():
+  print("\nChecking credentials...")
+  time.sleep(2)
+  file = open("database.txt","r")
+  fileContent = file.readlines()
+  print("Server ip: " + fileContent[0] +"" + "Username: " + fileContent[1] +"" + "Password: " + fileContent[2] +"" + "Table: " + fileContent[3] +"")
+
+  file.close()
 
 def setConnection():
   
@@ -47,13 +75,14 @@ def setConnection():
     
 
 def connectServer(): 
- while True: 
+ Attempts = 10
+ while Attempts > 0: 
   try: 
     file = open("database.txt","r")
     fileContent = file.readlines()
     passwordstr = str(fileContent[2])
     
-    if len(passwordstr) < 2:
+    if len(passwordstr) == 1:
       passwordstr = ("")
 
     mydb = mysql.connector.connect(
@@ -64,22 +93,45 @@ def connectServer():
     
     mycursor = mydb.cursor()
     print("Connection successfull")
-    
+    mainMenu()
     break
   except InterfaceError:
-    print("Couldn't connect to the server trying again...")
-    
+    print("Couldn't connect to the server trying again... (" + str(Attempts) + " attemtps remaining)")
+    Attempts = Attempts -1
+    if Attempts == 0 :
+      time.sleep(1)
+      chooseAnOption()
+      
+        
 
 def createTables():
+  
   table_name = input("Enter a table name: ")
   if table_name != "":
-      while True:
+   
+    while True:
         try:
+            file = open("database.txt","r")
+            fileContent = file.readlines()
+            passwordstr = str(fileContent[2])
+            
+            if len(passwordstr) == 1:
+              passwordstr = ("")
+
+            mydb = mysql.connector.connect(
+            host=fileContent[0],
+            user=fileContent[1],
+            password= passwordstr,
+            database=fileContent[3])
+            
+            mycursor = mydb.cursor()
             query =  "CREATE TABLE " + table_name + """(name VARCHAR(255), address VARCHAR(255))"""
             mycursor.execute(query)
             print("table created")
-        except:
-              print ("Table name already exists")
+            break
+        except ProgrammingError: 
+            print ("Table name already exists, choose another one")
+            createTables()
             
   else:
       print("Please enter a corret name for the table")
@@ -116,6 +168,17 @@ def mainMenu():
     listTables()
   elif option == 5:
     exitScript()
-  
+  elif option == 666:
+    abelardoAsc()
+    
+def chooseAnOption():
+  checkServerInfo = input("\n¿Do you want to check the server credentials y/n?: ")
+  if checkServerInfo == "y" :
+    checkCredentials()
+  elif checkServerInfo == "n" :
+    exitScript() 
+  elif checkServerInfo == "" or checkServerInfo != "y" or checkServerInfo != "n":
+    print("Enter a valid answer")
+    chooseAnOption()  
 
 mainMenu()

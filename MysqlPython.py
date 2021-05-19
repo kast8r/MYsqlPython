@@ -41,6 +41,7 @@ def abelardoAsc():
   "       ,--' `-,\n"
   "\n"
   "This is Abelardo\n")
+  mainMenu()
 
 def checkCredentials():
   print("\nChecking credentials...")
@@ -92,7 +93,10 @@ def connectServer():
     database=fileContent[3])
     
     mycursor = mydb.cursor()
-    print("Connection successfull")
+    print("\nConnecting...")
+    time.sleep(2)
+    print("Connection successfull!!\n")
+    time.sleep(1)
     mainMenu()
     break
   except InterfaceError:

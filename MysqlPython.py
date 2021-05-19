@@ -4,10 +4,9 @@ import mysql.connector
 from mysql.connector.constants import MAX_MYSQL_TABLE_COLUMNS
 import sys
 import os
+from playsound import playsound
 import json
 from mysql.connector.errors import InterfaceError, ProgrammingError
-
-
 
 print("\n",
 "\033[1;32;40m███╗   ███╗██╗   ██╗███████╗ ██████╗ ██╗\n",     
@@ -20,8 +19,10 @@ print("\n",
 "\n")
 
 def abelardoAsc():
+  
   print("\n"               
   "      ___\n"
+  
   "    .'``.``.\n"
   " __/ (o) `, `.\n"
   "'-=`,     ;   `.\n"
@@ -40,6 +41,8 @@ def abelardoAsc():
   "       ,--' `-,\n"
   "\n"
   "This is Abelardo\n")
+  playsound('bird.wav')
+  time.sleep(9)
   mainMenu()
 
 

@@ -43,37 +43,44 @@ def abelardoAsc():
   "This is Abelardo\n")
   mainMenu()
 
+
+def changeCredentials(): 
+      file = open("database.txt","w")
+      hostIp = input("Give a server ip: ")
+      file.write(hostIp + "\n")
+
+      user = input("Username: ")
+      file.write(user + "\n")
+
+      password = input("Password: ")
+      file.write(password + "\n")
+
+      database = input("Give a database name: ")
+      file.write(database + "\n")
+      file.close()
+
+def setConnection():
+  
+  if os.path.getsize("database.txt") == 0 :
+    changeCredentials()
+  else:
+    connectServer()
+    
 def checkCredentials():
   print("\nChecking credentials...")
   time.sleep(2)
   file = open("database.txt","r")
   fileContent = file.readlines()
   print("Server ip: " + fileContent[0] +"" + "Username: " + fileContent[1] +"" + "Password: " + fileContent[2] +"" + "Table: " + fileContent[3] +"")
-
-  file.close()
-
-def setConnection():
-  
-
-  
-  if os.path.getsize("database.txt") == 0 :
-    file = open("database.txt","w")
-    hostIp = input("Give a server ip: ")
-    file.write(hostIp + "\n")
-
-    user = input("Username: ")
-    file.write(user + "\n")
-
-    password = input("Password: ")
-    file.write(password + "\n")
-
-    database = input("Give a database name: ")
-    file.write(database + "\n")
-    file.close()
-  else:
-    connectServer()
-    
-    
+  changeCredentials = input("Do you want to change the credentials? y/n")
+  if changeCredentials == "y" :
+    changeCredentials()
+  elif changeCredentials == "n" :
+    exitScript() 
+  elif changeCredentials == "" or changeCredentials != "y" or changeCredentials != "n":
+    print("Enter a valid answer")
+    chooseAnOption()  
+  file.close()   
 
 def connectServer(): 
  Attempts = 10

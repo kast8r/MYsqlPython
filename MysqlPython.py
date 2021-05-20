@@ -18,7 +18,7 @@ print("\n",
 "\033[1;32;40m╚═╝     ╚═╝   ╚═╝   ╚══════╝ ╚══▀▀═╝ ╚══════╝\n"
 "\033[1;31;40mScript made by kastor",
 "\n")
-#playsound("intro.wav")
+playsound("intro.wav")
 
 
 def abelardoAsc():
@@ -64,7 +64,7 @@ def mainConnect():
     
     mainConnect.mycursor = mainConnect.mydb.cursor()
 def returnToMainMenu():
-  answer = print("¿Do you want to return to main menu? y/n: ")
+  answer = input("¿Do you want to return to main menu? y/n: ")
   if answer == "y":
     mainMenu()
   elif answer == "n":
@@ -215,15 +215,19 @@ def listTables():
       for x in mainConnect.mycursor:
           time.sleep(.50)
           print(x)
-        #TODO solve the for
+      print("\n\033[1;32;40mFinished\n \033[1;31;40m")
       returnToMainMenu()
+
+      
     elif choose == "2":
       print("listing...\n")
       time.sleep(2)
 
       for x in mainConnect.mycursor:
         print(x) 
+      print("\n\033[1;32;40mFinished\n \033[1;31;40m") 
       returnToMainMenu() 
+         
     elif choose == "" or choose != "1" or choose != "2":   
       print("Please give a valid answer 1 or 2")
       listTablesOptions()

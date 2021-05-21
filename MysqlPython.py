@@ -6,7 +6,7 @@ import sys
 import os
 from playsound import playsound
 import json
-from mysql.connector.errors import InterfaceError, ProgrammingError
+from mysql.connector.errors import DatabaseError, InterfaceError, ProgrammingError
 
 
 print("\n",
@@ -48,21 +48,18 @@ def abelardoAsc():
   time.sleep(9)
   mainMenu()
 
-def mainConnect():
-    file = open("database.txt","r")
-    fileContent = file.readlines()
-    passwordstr = str(fileContent[2])
-    
-    if len(passwordstr) == 1:
-      passwordstr = ("")
 
-    mainConnect.mydb = mysql.connector.connect(
-    host=fileContent[0],
-    user=fileContent[1],
-    password= passwordstr,
-    database=fileContent[3])
-    
-    mainConnect.mycursor = mainConnect.mydb.cursor()
+def chooseAnOption():
+  checkServerInfo = input("\n¿Do you want to check the server credentials y/n?: ")
+  if checkServerInfo == "y" :
+    checkCredentials()
+  elif checkServerInfo == "n" :
+    exitScript() 
+  elif checkServerInfo == "" or checkServerInfo != "y" or checkServerInfo != "n":
+    print("Enter a valid answer")
+    chooseAnOption()        
+
+
 def returnToMainMenu():
   answer = input("¿Do you want to return to main menu? y/n: ")
   if answer == "y":
@@ -89,6 +86,35 @@ def changeCredentials():
       database = input("Give a database name: ")
       file.write(database + "\n")
       file.close()
+
+def mainConnect():
+  Attempts = 10
+  while Attempts > 0: 
+    try: 
+      file = open("database.txt","r")
+      fileContent = file.readlines()
+      passwordstr = str(fileContent[2])
+      
+      if len(passwordstr) == 1:
+        passwordstr = ("")
+
+      mainConnect.mydb = mysql.connector.connect(
+      host=fileContent[0],
+      user=fileContent[1],
+      password= passwordstr,
+      database=fileContent[3])
+      
+      mainConnect.mycursor = mainConnect.mydb.cursor()
+      print("\033[1;32;40mConnection Successfull!!\n\033[1;31;40m")
+      break
+    except:
+        print("Couldn't connect to the server trying again... (" + str(Attempts) + " attemtps remaining)")
+        time.sleep(1)
+        Attempts = Attempts -1
+        if Attempts == 0 :
+          time.sleep(1)
+          chooseAnOption()
+
 
 def setConnection():
   
@@ -133,7 +159,7 @@ def connectServer():
     mycursor = mydb.cursor()
     print("\nConnecting...")
     time.sleep(2)
-    print("Connection successfull!!\n")
+    print("\033[1;32;40mConnection successfull!!\033[1;31;40m\n")
     time.sleep(1)
     mainMenu()
     break
@@ -245,10 +271,45 @@ def exitToMenut():
   time.sleep(1)
   mainMenu()
 
+def createDabatase():
+  Attempts = 10
+  while Attempts > 0: 
+    try: 
+      file = open("database.txt","r")
+      fileContent = file.readlines()
+      passwordstr = str(fileContent[2])
+      
+      if len(passwordstr) == 1:
+        passwordstr = ("")
+
+      mainConnect.mydb = mysql.connector.connect(
+      host=fileContent[0],
+      user=fileContent[1],
+      password= passwordstr)
+      mainConnect.mycursor = mainConnect.mydb.cursor()
+      print("\033[1;32;40mConnection Successfull!!\n\033[1;31;40m")
+      break
+    except:
+        print("Couldn't connect to the server trying again... (" + str(Attempts) + " attemtps remaining)")
+        time.sleep(1)
+        Attempts = Attempts -1
+        if Attempts == 0 :
+          time.sleep(1)
+          chooseAnOption()
+  DBname = str(input("Name for the database: "))
+  queryDBC = ("CREATE DATABASE """ + DBname + "")
+  try:
+    mainConnect.mycursor.execute(queryDBC)
+  except DatabaseError:
+    print("\nThis database already exists\nReturning to main menu...\n")
+    time.sleep(2)
+    mainMenu()
+
+
 
 
 def mainMenu():
-  print(" 1. To connect to a MYsql server\n",
+  print(" 1. To check connection with the MYsql server\n",
   
         "2. To create new databases\n",
         "3. To create new tables\n",
@@ -256,7 +317,6 @@ def mainMenu():
         "5. To change credentials\n",
         "6. Exit\n")
   option = int(input("Chose an option between (1-6): "))
-
 
   if option == 1:
     playsound('click.wav')
@@ -280,14 +340,6 @@ def mainMenu():
     playsound('click.wav')
     abelardoAsc()
     
-def chooseAnOption():
-  checkServerInfo = input("\n¿Do you want to check the server credentials y/n?: ")
-  if checkServerInfo == "y" :
-    checkCredentials()
-  elif checkServerInfo == "n" :
-    exitScript() 
-  elif checkServerInfo == "" or checkServerInfo != "y" or checkServerInfo != "n":
-    print("Enter a valid answer")
-    chooseAnOption()  
+
 
 mainMenu()
